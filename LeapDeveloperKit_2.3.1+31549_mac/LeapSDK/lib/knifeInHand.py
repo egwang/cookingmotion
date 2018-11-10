@@ -24,10 +24,13 @@ class PygameGame(object):
         self.brown = (139,69,19)
         self.black = (0,0,0)
         self.background = pygame.image.load("background.png")
+<<<<<<< HEAD
+=======
         self.swipe = False
         self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
         self.cut = 0
         self.score = 0
+>>>>>>> 2407df2dfab40a448d07e8b0342425a83f72da3b
         pass
 
     def mousePressed(self, x, y):
@@ -50,11 +53,14 @@ class PygameGame(object):
 
     def timerFired(self, dt):
         frame = self.controller.frame()
+<<<<<<< HEAD
+=======
         textsurface = self.myfont.render("Score: " + str(int(self.score)), False, (0, 0, 0))
         self.win.blit(textsurface,(50,50))
         
         pygame.draw.rect(self.win,(255,0,0),(0,0,10+(5*self.cut),10))
         pygame.draw.polygon(self.win,(0,255,0),[(400,10),(380,20),(420,20)])
+>>>>>>> 2407df2dfab40a448d07e8b0342425a83f72da3b
         
         print(self.cut)
         self.score = self.cut
@@ -79,6 +85,13 @@ class PygameGame(object):
                 #knife = pygame.transform.scale(self.knife,(150,150))
                 self.knifeX=50
                 self.knifeY=250
+<<<<<<< HEAD
+                self.win.blit(knife,(self.knifeX,self.knifeY))
+                smallImg = pygame.transform.scale(self.openHand,        (int(normalized[2]*500),int(normalized[2]*500)))
+            if self.toolGrabbed == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
+                self.lineLst.append(self.knifeX)
+                
+=======
                 self.win.blit(self.knife,(self.knifeX,self.knifeY))
                 smallImg = pygame.transform.rotozoom(self.openHand,0,currentZ)
 
@@ -98,6 +111,7 @@ class PygameGame(object):
             
             if hand.palm_velocity[1] > 0:
                 self.swipe = False
+>>>>>>> 2407df2dfab40a448d07e8b0342425a83f72da3b
             
         #yeet
             self.win.blit(smallImg,(int(normalized[0]*500),500-int(normalized[1]*500)))
