@@ -41,12 +41,9 @@ while run:
         x += vel                        
 
     if not(isJump): #doesn't allow you to move up/down if jumping or jump again if jumping
-        if keys[pygame.K_UP] and y > 0:
-            y -= vel
-        if keys[pygame.K_DOWN] and y < 500 - vel:
-            y += vel
         if keys[pygame.K_SPACE]:
             isJump = True
+            
     else: #when jumping
         if jumpCount >= -10: 
             neg = 1 #start moving up 
@@ -59,6 +56,8 @@ while run:
         else:
             isJump = False
             jumpCount = 10
+            
+            
     redrawWindow()
             
 pygame.quit() #closes the window
