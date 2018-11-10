@@ -5,13 +5,6 @@ class PygameGame(object):
 
     def init(self):
         self.controller = Leap.Controller()
-<<<<<<< HEAD
-        self.win = pygame.display.set_mode((500,500))
-        self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)      
-        self.dots = []  
-        self.swipe = False
-        self.tenderize = 0
-=======
         self.width = 500
         self.height
         self.win = pygame.display.set_mode((self.width,self.height))
@@ -37,13 +30,9 @@ class PygameGame(object):
         pygame.font.init() # you have to call this at the start, 
                    # if you want to use this module.
         self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
-<<<<<<< HEAD
->>>>>>> 6dbf2265079e8d64e08282da44ad4934a6f99fc5
-=======
         self.image = 0
         self.currentX = 0
         self.currentY = 0
->>>>>>> 6796965d8323f6d50024eab3c44e2c59a2742ebc
         pass
 
     def mousePressed(self, x, y):
@@ -65,43 +54,18 @@ class PygameGame(object):
         pass
 
     def timerFired(self, dt):
-<<<<<<< HEAD
-        frame = self.controller.frame()
-        
-=======
         self.win.blit(self.background,(0,0))
 
         frame = self.controller.frame()
         textsurface = self.myfont.render("Score: " + str(int(self.score)), False, (0, 0, 0))
         self.win.blit(textsurface,(50,50))
 
->>>>>>> 6dbf2265079e8d64e08282da44ad4934a6f99fc5
         # for gesture in frame.gestures():
         #     if gesture.type is Leap.Gesture.TYPE_SWIPE:
         #         swipe = Leap.SwipeGesture(gesture)
         #         if abs(swipe.direction[0]) < 0.5 and swipe.direction[1] < -0.9 and abs(swipe.direction[2] < 0.5):
         #             print(swipe.speed)
         #
-<<<<<<< HEAD
-        
-        
-        
-        pygame.draw.rect(self.win,(255,0,0),(100,300,100,100))
-        pygame.draw.rect(self.win,(255,0,0),(0,0,10+(5*self.tenderize),100))
-
-        
-        for dot in self.dots:
-            pygame.draw.circle(self.win, (0,255,0), (int(dot[0]),int(dot[1])), 2)
-
-        
-        for hand in frame.hands:
-            print(hand.palm_velocity)
-            normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
-            currentX = normalized[0]*500
-            currentY = 500-normalized[1]*500
-            currentZ = normalized[2]*200
-            if currentX + currentZ / 2 < 200 and currentY < 400 and currentX + currentZ / 2 > 100 and currentY > 300 and not self.swipe:
-=======
         self.win.blit(self.meat,(self.meatBounds[0],self.meatBounds[1]-25))
         
         #pygame.draw.rect(self.win,(255,0,0),(100,300,100,100))
@@ -119,15 +83,9 @@ class PygameGame(object):
             currentX = normalized[0]*500
             currentY = 500-normalized[1]*500
             currentZ = int(normalized[2]*200)
-<<<<<<< HEAD
-            image = 0
-            if currentX + currentZ / 2 < self.meatBounds[2] and currentY < self.meatBounds[3] and currentX + currentZ / 2 > self.meatBounds[0] and currentY > self.meatBounds[1] and not self.swipe:
->>>>>>> 6dbf2265079e8d64e08282da44ad4934a6f99fc5
-=======
-            scaleFactor = normalized[2]*0.5 + 0.5
+            scale = normalized[2]*0.5 + 0.5
 
             if currentX + currentZ / 2 < self.meatBounds[2] and currentY < self.meatBounds[3] and currentX + currentZ / 2 > self.meatBounds[0] and currentY > self.meatBounds[1] and not self.swipe and self.hasTenderizer:
->>>>>>> 6796965d8323f6d50024eab3c44e2c59a2742ebc
                 if hand.palm_velocity[1] < -400:
                     self.swipe = True
                     for i in range(3):
@@ -137,27 +95,17 @@ class PygameGame(object):
                 
             if hand.palm_velocity[1] > 0:
                 self.swipe = False
-<<<<<<< HEAD
-            if hand.grab_strength > 0.5:
-                color = (200,200,0)
-            else:
-                color = (200,200,200)
-            normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
-            pygame.draw.rect(self.win,color,(int(normalized[0]*500),500-int(normalized[1]*500),25 + normalized[2]*70,25 + normalized[2]*70))
-        pygame.display.update()
-            #print(normalized[0]*500)
-        
-        
-=======
         
             if hand.grab_strength > 0.5:
-                self.image = pygame.transform.rotozoom(self.closedHand,0,scaleFactor)
+                self.image = pygame.transform.rotozoom(self.closedHand,0,scale)
+
                 if abs(currentX-self.tenderizerX)<=50 and abs(currentY - self.tenderizerY -100) <= 50:
                     self.hasTenderizer = True
 
                
             else:
-                self.image = pygame.transform.rotozoom(self.openHand,0,scaleFactor)
+                self.image = pygame.transform.rotozoom(self.openHand,0,scale)
+
                 self.hasTenderizer = False
             
 
@@ -165,7 +113,8 @@ class PygameGame(object):
             self.currentY = currentY
             if self.hasTenderizer:
 
-                self.image = pygame.transform.rotozoom(self.tenderizerinhand,0,scaleFactor)
+                self.image = pygame.transform.rotozoom(self.tenderizerinhand,0,scale)
+
                 self.win.blit(self.tenderizer,(1000,1000))
             else:
                 self.win.blit(self.tenderizer,(self.tenderizerX,self.tenderizerY))
@@ -185,7 +134,6 @@ class PygameGame(object):
             #print(normalized[0]*500)
         
 
->>>>>>> 6dbf2265079e8d64e08282da44ad4934a6f99fc5
                 
             
         pass
@@ -252,4 +200,5 @@ def main():
     game.run()
 
 if __name__ == '__main__':
-    main()
+    main()    
+    
