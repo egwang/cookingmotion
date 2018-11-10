@@ -6,7 +6,7 @@ from tenderize import Tenderize
 #run game
 class Game(PygameGame):
     def init(self):
-        data.time = 0
+        self.time = 0
         #start page
         self.startpage = True
         Start.init()
@@ -34,8 +34,8 @@ class Game(PygameGame):
             pass
         else:
             #change each page every 10 seconds
-            data.time += 1
-            if data.time < 1000:
+            self.time += 1
+            if self.time < 1000:
                 self.tenderisePage = True
             elif 1000 < data.time < 2000:
                 self.tenderisePage = False
