@@ -24,6 +24,7 @@ class PygameGame(object):
         self.brown = (139,69,19)
         self.black = (0,0,0)
         self.background = pygame.image.load("background.png")
+        self.swipe = False
         pass
 
     def mousePressed(self, x, y):
@@ -55,7 +56,7 @@ class PygameGame(object):
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
             currentX = int(normalized[0]*500)
             currentY = int(500-normalized[1]*500)
-            currentZ = normalized[2] + 0.25
+            currentZ = normalized[2]*0.5 + 0.5
             smallImg = 0
             if hand.grab_strength > 0.5:
                 smallImg = pygame.transform.rotozoom(self.closedHand,0,currentZ)
@@ -77,10 +78,14 @@ class PygameGame(object):
             else:
                 self.win.blit(self.knife,(50,250))
             
-            if self.toolGrabbed == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
-                self.lineLst.append(self.knifeX)
-                print(self.lineList)
-                
+            if self.toolGrabbed == True and self.steakX<currentX<self.steakX+self.steakDim and \
+            not self.swipe:
+                if hand.palm_velocity[1] < -400:
+                    self.swipe = True
+                    self.lineLst.append(currentX+40)
+            
+            if hand.palm_velocity[1] > 0:
+                self.swipe = False
             
         #yeet
             self.win.blit(smallImg,(int(normalized[0]*500),500-int(normalized[1]*500)))
