@@ -67,7 +67,7 @@ class PygameGame(object):
                 smallImg = pygame.transform.scale(self.closedHand, (int(normalized[2]*500),int(normalized[2]*500)))
                 if abs(currentX-self.knifeX)<=50:
                     self.knifeX=int(normalized[0]*500)
-                    self.knifeY=500-int(normalized[1]*500)
+                    self.knifeY=500-int(normlized[1]*500)
                     smallImg = pygame.transform.scale(self.fistKnife, (int(normalized[2]*500),int(normalized[2]*500)))
                 else:
                     knife = pygame.transform.scale(self.knife,(80,80))

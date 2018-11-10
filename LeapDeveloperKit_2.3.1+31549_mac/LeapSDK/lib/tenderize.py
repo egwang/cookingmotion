@@ -27,11 +27,23 @@ class PygameGame(object):
         self.score = 0
         self.openHand = pygame.image.load("openhand.png")
         self.closedHand = pygame.image.load("closedhand.png")
-
+        self.openHand = pygame.transform.rotozoom(self.openHand,0,.8)
+        self.closedHand = pygame.transform.rotozoom(self.closedHand,0,.8)
+        self.tenderizerX = 300
+        self.tenderizerY = 30
+        self.hasTenderizer = False
+        self.tenderizer = pygame.image.load("tenderizer.png")
+        self.tenderizerinhand = pygame.image.load("tenderizerinhand.png")
         pygame.font.init() # you have to call this at the start, 
                    # if you want to use this module.
         self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
+<<<<<<< HEAD
 >>>>>>> 6dbf2265079e8d64e08282da44ad4934a6f99fc5
+=======
+        self.image = 0
+        self.currentX = 0
+        self.currentY = 0
+>>>>>>> 6796965d8323f6d50024eab3c44e2c59a2742ebc
         pass
 
     def mousePressed(self, x, y):
@@ -107,9 +119,15 @@ class PygameGame(object):
             currentX = normalized[0]*500
             currentY = 500-normalized[1]*500
             currentZ = int(normalized[2]*200)
+<<<<<<< HEAD
             image = 0
             if currentX + currentZ / 2 < self.meatBounds[2] and currentY < self.meatBounds[3] and currentX + currentZ / 2 > self.meatBounds[0] and currentY > self.meatBounds[1] and not self.swipe:
 >>>>>>> 6dbf2265079e8d64e08282da44ad4934a6f99fc5
+=======
+            scaleFactor = normalized[2]*0.5 + 0.5
+
+            if currentX + currentZ / 2 < self.meatBounds[2] and currentY < self.meatBounds[3] and currentX + currentZ / 2 > self.meatBounds[0] and currentY > self.meatBounds[1] and not self.swipe and self.hasTenderizer:
+>>>>>>> 6796965d8323f6d50024eab3c44e2c59a2742ebc
                 if hand.palm_velocity[1] < -400:
                     self.swipe = True
                     for i in range(3):
@@ -133,12 +151,36 @@ class PygameGame(object):
 =======
         
             if hand.grab_strength > 0.5:
-                image = self.closedHand
+                self.image = pygame.transform.rotozoom(self.closedHand,0,scaleFactor)
+                if abs(currentX-self.tenderizerX)<=50 and abs(currentY - self.tenderizerY -100) <= 50:
+                    self.hasTenderizer = True
+
                
             else:
-                image = self.openHand
-            print(currentZ)
-            self.win.blit(image,(currentX,currentY))
+                self.image = pygame.transform.rotozoom(self.openHand,0,scaleFactor)
+                self.hasTenderizer = False
+            
+
+            self.currentX = currentX
+            self.currentY = currentY
+            if self.hasTenderizer:
+
+                self.image = pygame.transform.rotozoom(self.tenderizerinhand,0,scaleFactor)
+                self.win.blit(self.tenderizer,(1000,1000))
+            else:
+                self.win.blit(self.tenderizer,(self.tenderizerX,self.tenderizerY))
+            self.win.blit(self.image,(currentX,currentY))
+        if len(frame.hands) == 0:
+            self.win.blit(self.tenderizer,(self.tenderizerX,self.tenderizerY))
+
+        
+            
+            
+
+                
+            
+                
+                
         pygame.display.update()
             #print(normalized[0]*500)
         
