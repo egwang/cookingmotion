@@ -17,6 +17,10 @@ class PygameGame(object):
         self.dots = []  
         self.swipe = False
         self.tenderize = 0
+        self.score = 0
+        pygame.font.init() # you have to call this at the start, 
+                   # if you want to use this module.
+        self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
         pass
 
     def mousePressed(self, x, y):
@@ -41,7 +45,9 @@ class PygameGame(object):
         self.win.blit(self.background,(0,0))
 
         frame = self.controller.frame()
-        
+        textsurface = self.myfont.render(str(int(self.score)), False, (0, 0, 0))
+        self.win.blit(textsurface,(50,50))
+
         # for gesture in frame.gestures():
         #     if gesture.type is Leap.Gesture.TYPE_SWIPE:
         #         swipe = Leap.SwipeGesture(gesture)
@@ -51,15 +57,16 @@ class PygameGame(object):
         self.win.blit(self.meat,(self.meatBounds[0],self.meatBounds[1]-25))
         
         #pygame.draw.rect(self.win,(255,0,0),(100,300,100,100))
-        pygame.draw.rect(self.win,(255,0,0),(0,0,10+(5*self.tenderize),100))
+        pygame.draw.rect(self.win,(255,0,0),(0,0,10+(5*self.tenderize),10))
+        pygame.draw.polygon(self.win,(0,255,0),[(400,10),(380,20),(420,20)])
 
-        
+        self.score = 100 * (1 - abs(80-self.tenderize)/80)
+        print(self.score)
         for dot in self.dots:
             pygame.draw.circle(self.win, (128, 0, 0), (int(dot[0]),int(dot[1])), 2)
 
         
         for hand in frame.hands:
-            print(hand.palm_velocity)
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
             currentX = normalized[0]*500
             currentY = 500-normalized[1]*500
