@@ -1,7 +1,8 @@
 import pygame
-
+from tenderize import *
+from knifeInHand import *
 from pygamegame import PygameGame
-from Start import Start
+from StarterFile import *
 
 #run game
 class Game(PygameGame):
@@ -16,7 +17,7 @@ class Game(PygameGame):
         # self.tenderise = import the funct
         # self.chop = import the funct
         # self.saute = import the funct
-        self.tenderisePage = False
+        self.tenderizePage = False
         self.chopPage = False
         self.sautePage = False
         self.gameMode = 0
@@ -36,11 +37,11 @@ class Game(PygameGame):
             pass
         else:
             #change each page every 10 seconds
-            self.time += 1000
+            self.time += 100
             if self.time < 1000:
-                self.tenderisePage = True
+                self.tenderizePage = True
             elif 1000 < self.time < 2000:
-                self.tenderisePage = False
+                self.tenderizePage = False
                 self.chopPage = True
             elif 2000 < self.time < 3000:
                 self.chopPage = False
@@ -54,7 +55,8 @@ class Game(PygameGame):
         
         if self.startpage == True:
             self.start.draw(screen)
-        elif self.tenderisePage == True:
+        elif self.tenderizePage == True:
+            
             pass
         elif self.chopPage == True:
             pass

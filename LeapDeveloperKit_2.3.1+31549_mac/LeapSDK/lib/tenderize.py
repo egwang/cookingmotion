@@ -53,7 +53,7 @@ class PygameGame(object):
     def keyReleased(self, keyCode, modifier):
         pass
 
-    def timerFired(self, dt):
+    def tenderizeTimerFired(self, dt):
         self.win.blit(self.background,(0,0))
 
         frame = self.controller.frame()
