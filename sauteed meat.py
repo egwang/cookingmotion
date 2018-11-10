@@ -16,6 +16,15 @@ run = True
 isJump = False
 jumpCount = 10 # how much we want the sprite to jump
 
+def redrawWindow():
+    win.fill((255,255,255))
+    #win is where the rect is drawn onto
+    #pygame takes in RGB Values
+    #rectangles take in 4 values (x, y, width and height)
+    pygame.draw.rect(win, (255,0,0), (x,y, width,height))
+    pygame.display.update() #must update for the dispaly to show the rect
+    
+
 while run:
     pygame.time.delay(100) #timer in the game
     
@@ -49,13 +58,6 @@ while run:
         else:
             isJump = False
             jumpCount = 10
-    
-    win.fill((255,255,255))
-    #win is where the rect is drawn onto
-    #pygame takes in RGB Values
-    #rectangles take in 4 values (x, y, width and height)
-    pygame.draw.rect(win, (255,0,0), (x,y, width,height))
-    pygame.display.update() #must update for the dispaly to show the rect
-    
+   
             
 pygame.quit() #closes the window

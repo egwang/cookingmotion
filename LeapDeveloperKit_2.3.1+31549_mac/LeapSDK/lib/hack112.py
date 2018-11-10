@@ -33,19 +33,12 @@ class PygameGame(object):
             for finger in hand.fingers:
                 boneVect = finger.bone(3).next_joint
                 handVect = hand.palm_position
-                distance = ((boneVect[0]-handVect[0])**2 + (boneVect[1]-handVect[1])**2+ (boneVect[2]-handVect[2])**2)**0.5
-                print(distance)
+                distance = ((boneVect[0]-handVect[0])**2 + (boneVect[1]-handVect[1])**2 + (boneVect[2]-handVect[2])**2)**0.5
                 if distance < 50:
                     print("yee")
                     color = (200,200,0)
                 else:
                     color = (200,200,200)
-
-                
-                #     break
-                # else:
-                
-
                 
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
             pygame.draw.rect(self.win,color,(int(normalized[0]*500),500-int(normalized[1]*500),normalized[2]*200,normalized[2]*200))
