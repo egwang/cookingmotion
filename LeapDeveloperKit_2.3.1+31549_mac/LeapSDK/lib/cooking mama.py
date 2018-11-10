@@ -1,7 +1,7 @@
 import pygame
-
 from pygamegame import PygameGame
 from Start import Start
+from tenderize import Tenderize
 
 #run game
 class Game(PygameGame):
@@ -11,14 +11,14 @@ class Game(PygameGame):
         self.startpage = True
         Start.init()
         start = Start(self.width / 2, self.height / 2)
-        self.start = pygame.sprite.GroupSingle(start)
+        self.start = pygame.sprite.GroupSingle(tenderize)
         # #import each page here
-        # self.tenderise = import the funct
+        # self.tenderise = pygame.sprite.GroupSingle(tenderize)
         # self.chop = import the funct
         # self.saute = import the funct
-        self.tenderisePage = False:
-        self.chopPage = False:
-        self.sautePage = False:
+        self.tenderisePage = False
+        self.chopPage = False
+        self.sautePage = False
     def keyPressed(self, code, mod):
         pass
         
@@ -59,5 +59,6 @@ class Game(PygameGame):
             pass
         else:
             #draw final page if we have
+            pass
 
 Game(520, 786).run()

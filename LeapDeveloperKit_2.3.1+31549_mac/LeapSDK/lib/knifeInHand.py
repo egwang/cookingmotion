@@ -12,14 +12,18 @@ class PygameGame(object):
         self.knife = pygame.image.load("knife.png")
         self.fistKnife = pygame.image.load("fistknife.png")
         self.steak = pygame.image.load("steak.png")
-        self.steakDim = 100
-        pygame.transform.scale(self.steak,(self.steakDim,self.steakDim))
+        self.steakDim = 200
+        self.steak=pygame.transform.scale(self.steak,(self.steakDim,self.steakDim))
         self.knifeX = 50
         self.knifeY = 250  
-        self.steakX = 100
+        self.steakX = 150
         self.steakY = 150  
         self.toolGrabbed = False
         self.isClosed = False
+        self.lineLst = []
+        self.brown = (139,69,19)
+        self.black = (0,0,0)
+        self.background = pygame.image.load("background.png")
         pass
 
     def mousePressed(self, x, y):
@@ -42,7 +46,6 @@ class PygameGame(object):
 
     def timerFired(self, dt):
         frame = self.controller.frame()
-        self.win.blit(self.steak,(self.steakX,self.steakY))
         
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
@@ -71,16 +74,18 @@ class PygameGame(object):
                 self.win.blit(knife,(self.knifeX,self.knifeY))
                 smallImg = pygame.transform.scale(self.openHand,        (int(normalized[2]*500),int(normalized[2]*500)))
             if self.toolGrabbed == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
-                pygame.draw.line(self.win, (0,0,0),(self.knifeX,250), (self.knifeX,500))
+                self.lineLst.append(self.knifeX)
+                
             
         #yeet
             self.win.blit(smallImg,(int(normalized[0]*500),500-int(normalized[1]*500)))
+        if len(frame.hands) == 0:
+            self.win.blit(self.knife,(50,250))
 
-
-            print(normalized)
+            
 
             #pygame.draw.rect(self.win,color,(int(normalized[0]*500),500-int(normalized[1]*500),normalized[2]*200,normalized[2]*200))
-            pygame.display.update()
+        pygame.display.update()
         
         
                 
@@ -88,6 +93,14 @@ class PygameGame(object):
         pass
 
     def redrawAll(self, screen):
+        background = pygame.transform.scale(self.background,(500,500))
+        self.win.blit(background, (0,0))
+        pygame.draw.rect(self.win,self.brown,[100,100,300,300])
+        #pygame.draw.rect(self.win,self.black,[100,0,300,100])
+        #pygame.draw.rect(self.win,self.black,[100,400,300,500])
+        self.win.blit(self.steak,(self.steakX,self.steakY))
+        for line in self.lineLst:
+            pygame.draw.line(self.win, self.brown,(line,150), (line,350))
         pass
 
     def isKeyPressed(self, key):
