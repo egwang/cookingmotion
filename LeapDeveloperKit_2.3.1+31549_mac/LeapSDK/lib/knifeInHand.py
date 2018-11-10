@@ -12,9 +12,12 @@ class PygameGame(object):
         self.knife = pygame.image.load("knife.png")
         self.fistKnife = pygame.image.load("fistknife.png")
         self.steak = pygame.image.load("steak.png")
-        self.steakMod = pygame.transform.scale(self.steak, (200,200))
+        self.steakDim = 100
+        pygame.transform.scale(self.steak,(self.steakDim,self.steakDim))
         self.knifeX = 50
-        self.knifeY = 250    
+        self.knifeY = 250  
+        self.steakX = 100
+        self.steakY = 150  
         self.toolGrabbed = False
         self.isClosed = False
         pass
@@ -39,7 +42,7 @@ class PygameGame(object):
 
     def timerFired(self, dt):
         frame = self.controller.frame()
-        self.win.blit(self.steak,(150,200))
+        self.win.blit(self.steak,(self.steakX,self.steakY))
         
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
@@ -52,21 +55,25 @@ class PygameGame(object):
             if hand.grab_strength > 0.5:
                 smallImg = pygame.transform.scale(self.closedHand, (int(normalized[2]*500),int(normalized[2]*500)))
                 if abs(currentX-self.knifeX)<=50:
+                    self.toolGrabbed = True
                     self.knifeX=int(normalized[0]*500)
                     self.knifeY=500-int(normalized[1]*500)
                     smallImg = pygame.transform.scale(self.fistKnife, (int(normalized[2]*500),int(normalized[2]*500)))
                 else:
-                    knife = pygame.transform.scale(self.knife,(80,80))
-
-                    self.win.blit(knife,(50,50))
+                    self.toolGrabbed = False
+                    knife = pygame.transform.scale(self.knife,(150,150))
+                    self.win.blit(knife,(50,250))
             else:
-                knife = pygame.transform.scale(self.knife,(80,80))
+                self.toolGrabbed = False
+                knife = pygame.transform.scale(self.knife,(150,150))
                 self.knifeX=50
                 self.knifeY=250
                 self.win.blit(knife,(self.knifeX,self.knifeY))
-                smallImg = pygame.transform.scale(self.openHand, (int(normalized[2]*500),int(normalized[2]*500)))
+                smallImg = pygame.transform.scale(self.openHand,        (int(normalized[2]*500),int(normalized[2]*500)))
+            if self.toolGrabbed = True and self.steakX<self.knifeX<self.steakX+self.steakDim:
+                pygame.draw.line(screen, (0,0,0),(self.knifeX,250), (self.knifeX,500)))
             
-        
+        #yeet
             self.win.blit(smallImg,(int(normalized[0]*500),500-int(normalized[1]*500)))
 
 
@@ -74,7 +81,6 @@ class PygameGame(object):
 
             #pygame.draw.rect(self.win,color,(int(normalized[0]*500),500-int(normalized[1]*500),normalized[2]*200,normalized[2]*200))
             pygame.display.update()
-            #print(normalized[0]*500)
         
         
                 
