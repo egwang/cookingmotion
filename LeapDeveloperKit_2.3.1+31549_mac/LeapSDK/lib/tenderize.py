@@ -92,8 +92,7 @@ class PygameGame(object):
             else:
                 image = self.openHand
             print(currentZ)
-            pygame.transform.scale(self.openHand,(currentZ,currentZ))
-            self.win.blit(self.openHand,(currentX,currentY))
+            self.win.blit(image,(currentX,currentY))
         pygame.display.update()
             #print(normalized[0]*500)
         
