@@ -7,8 +7,8 @@ class PygameGame(object):
         self.controller = Leap.Controller()
         self.win = pygame.display.set_mode((500,500))
         self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)  
-        self.openHand = pygame.image.load("openHand.png") 
-        self.closedHand = pygame.image.load("closedHand.png") 
+        self.openHand = pygame.image.load("openhand.png") 
+        self.closedHand = pygame.image.load("closedhand.png") 
         self.knife = pygame.image.load("knife.png")
         self.fistKnife = pygame.image.load("fistknife.png")
         self.steak = pygame.image.load("steak.png")
@@ -24,6 +24,13 @@ class PygameGame(object):
         self.brown = (139,69,19)
         self.black = (0,0,0)
         self.background = pygame.image.load("background.png")
+<<<<<<< HEAD
+=======
+        self.swipe = False
+        self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        self.cut = 0
+        self.score = 0
+>>>>>>> 2407df2dfab40a448d07e8b0342425a83f72da3b
         pass
 
     def mousePressed(self, x, y):
@@ -46,7 +53,18 @@ class PygameGame(object):
 
     def timerFired(self, dt):
         frame = self.controller.frame()
+<<<<<<< HEAD
+=======
+        textsurface = self.myfont.render("Score: " + str(int(self.score)), False, (0, 0, 0))
+        self.win.blit(textsurface,(50,50))
         
+        pygame.draw.rect(self.win,(255,0,0),(0,0,10+(5*self.cut),10))
+        pygame.draw.polygon(self.win,(0,255,0),[(400,10),(380,20),(420,20)])
+>>>>>>> 2407df2dfab40a448d07e8b0342425a83f72da3b
+        
+        print(self.cut)
+        self.score = self.cut
+
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
                 print("swipe")
@@ -55,27 +73,45 @@ class PygameGame(object):
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
             currentX = int(normalized[0]*500)
             currentY = int(500-normalized[1]*500)
+            currentZ = normalized[2]*0.5 + 0.5
+            smallImg = 0
             if hand.grab_strength > 0.5:
-                smallImg = pygame.transform.scale(self.closedHand, (int(normalized[2]*500),int(normalized[2]*500)))
+                smallImg = pygame.transform.rotozoom(self.closedHand,0,currentZ)
                 if abs(currentX-self.knifeX)<=50:
                     self.toolGrabbed = True
-                    self.knifeX=int(normalized[0]*500)
-                    self.knifeY=500-int(normalized[1]*500)
-                    smallImg = pygame.transform.scale(self.fistKnife, (int(normalized[2]*500),int(normalized[2]*500)))
-                else:
-                    self.toolGrabbed = False
-                    knife = pygame.transform.scale(self.knife,(150,150))
-                    self.win.blit(knife,(50,250))
+
             else:
                 self.toolGrabbed = False
-                knife = pygame.transform.scale(self.knife,(150,150))
+                #knife = pygame.transform.scale(self.knife,(150,150))
                 self.knifeX=50
                 self.knifeY=250
+<<<<<<< HEAD
                 self.win.blit(knife,(self.knifeX,self.knifeY))
                 smallImg = pygame.transform.scale(self.openHand,        (int(normalized[2]*500),int(normalized[2]*500)))
             if self.toolGrabbed == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
                 self.lineLst.append(self.knifeX)
                 
+=======
+                self.win.blit(self.knife,(self.knifeX,self.knifeY))
+                smallImg = pygame.transform.rotozoom(self.openHand,0,currentZ)
+
+            if self.toolGrabbed:
+                smallImg = pygame.transform.rotozoom(self.fistKnife,0,currentZ)
+
+                self.win.blit(self.knife,(1000,1000))
+            else:
+                self.win.blit(self.knife,(50,250))
+            
+            if self.toolGrabbed == True and self.steakX<currentX<self.steakX+self.steakDim and \
+            not self.swipe:
+                if hand.palm_velocity[1] < -400:
+                    self.swipe = True
+                    self.lineLst.append(currentX+40)
+                    self.cut += 5
+            
+            if hand.palm_velocity[1] > 0:
+                self.swipe = False
+>>>>>>> 2407df2dfab40a448d07e8b0342425a83f72da3b
             
         #yeet
             self.win.blit(smallImg,(int(normalized[0]*500),500-int(normalized[1]*500)))
