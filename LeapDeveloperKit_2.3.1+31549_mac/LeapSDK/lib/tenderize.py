@@ -5,8 +5,15 @@ class PygameGame(object):
 
     def init(self):
         self.controller = Leap.Controller()
-        self.win = pygame.display.set_mode((500,500))
-        self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)      
+        self.width = 500
+        self.height
+        self.win = pygame.display.set_mode((self.width,self.height))
+        self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)   
+        self.meat = pygame.image.load("meat.png")
+        pygame.transform.scale(self.meat,(100,100))
+        self.meatBounds = (self.width/2-80,self.height/1.3-50,self.width/2+80,self.height/1.3+50)
+        self.background = pygame.image.load("background.png")
+        pygame.transform.scale(self.background,(500,500))
         self.dots = []  
         self.swipe = False
         self.tenderize = 0
@@ -31,6 +38,8 @@ class PygameGame(object):
         pass
 
     def timerFired(self, dt):
+        self.win.blit(self.background,(0,0))
+
         frame = self.controller.frame()
         
         # for gesture in frame.gestures():
@@ -39,14 +48,14 @@ class PygameGame(object):
         #         if abs(swipe.direction[0]) < 0.5 and swipe.direction[1] < -0.9 and abs(swipe.direction[2] < 0.5):
         #             print(swipe.speed)
         #
+        self.win.blit(self.meat,(self.meatBounds[0],self.meatBounds[1]-25))
         
-        
-        pygame.draw.rect(self.win,(255,0,0),(100,300,100,100))
+        #pygame.draw.rect(self.win,(255,0,0),(100,300,100,100))
         pygame.draw.rect(self.win,(255,0,0),(0,0,10+(5*self.tenderize),100))
 
         
         for dot in self.dots:
-            pygame.draw.circle(self.win, (0,255,0), (int(dot[0]),int(dot[1])), 2)
+            pygame.draw.circle(self.win, (128, 0, 0), (int(dot[0]),int(dot[1])), 2)
 
         
         for hand in frame.hands:
@@ -55,7 +64,7 @@ class PygameGame(object):
             currentX = normalized[0]*500
             currentY = 500-normalized[1]*500
             currentZ = normalized[2]*200
-            if currentX + currentZ / 2 < 200 and currentY < 400 and currentX + currentZ / 2 > 100 and currentY > 300 and not self.swipe:
+            if currentX + currentZ / 2 < self.meatBounds[2] and currentY < self.meatBounds[3] and currentX + currentZ / 2 > self.meatBounds[0] and currentY > self.meatBounds[1] and not self.swipe:
                 if hand.palm_velocity[1] < -400:
                     self.swipe = True
                     for i in range(3):
@@ -74,7 +83,7 @@ class PygameGame(object):
         pygame.display.update()
             #print(normalized[0]*500)
         
-        
+
                 
             
         pass
