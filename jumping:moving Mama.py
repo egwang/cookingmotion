@@ -32,7 +32,10 @@ bg = pygame.image.load('startpage/images/start.png')
 mama = pygame.image.load('startpage/mamaAndSpatchula.png')
 mama = pygame.transform.scale(mama, (spriteSize, spriteSize))
 
+
+
 def redrawWindow(): #keeps redraw separate for good style
+<<<<<<< HEAD
     global walkCount #global allows for updated count to also affect mainloop 
     
     win.blit(bg,(0,0))
@@ -40,13 +43,23 @@ def redrawWindow(): #keeps redraw separate for good style
     if walkCount + 1 >= 27: #there's 9 pics, so we display each pic 3 times
         walkCount = 0
     elif leftMamaWalk == True:
-        win.blit(walkLeftList[walkCount//3], (x,y))
+        win.blit(walkLeftList[walkCount//3], (x,y)) #changes picture every 3 frame
         walkCount += 1
     elif rightMamaWalk == True:
         win.blit(walkRightList[walkCount//3], (x,y))
         walkCount += 1
     else:
         win.blit(mama, (x,y))
+=======
+    win.fill((255,255,255))
+    #win is where the rect is drawn onto
+    #pygame takes in RGB Values
+    #rectangles take in 4 values (x, y, width and height)
+    pygame.draw.rect(win, (255,0,0), (x,y, width,height))
+    image = pygame.image.load("background.png")
+    pygame.transform.scale(image,(500,500))
+    win.blit(image, (0,0))
+>>>>>>> 2d16c669501268a174c1f4ef11bfe0dffb37be09
     pygame.display.update() #must update for the dispaly to show the rect
     
 
@@ -60,8 +73,8 @@ while run:
     
     #to get continuous motion (ie: moving left), follow the syntax below:
     keys = pygame.key.get_pressed() 
-
-    if keys[pygame.K_LEFT] and x > 0:
+    print(x)
+    if keys[pygame.K_LEFT] and x > 0 - margin:
         x -= vel
         leftMamaWalk = True
         rightMamaWalk = False

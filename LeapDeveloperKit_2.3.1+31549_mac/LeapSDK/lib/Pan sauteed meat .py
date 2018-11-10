@@ -1,14 +1,20 @@
 import pygame
 import Leap, sys, thread, time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
+
 class PygameGame(object):
 
     def init(self):
         self.controller = Leap.Controller()
         self.win = pygame.display.set_mode((500,500))
-        self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)        
-        pass
-
+        self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)      
+        self.dots = []  
+        self.swipe = False
+        self.jump = 0
+        self.colorR = 255 
+        self.colorG = 50 
+        self.colorB = 30
+        self.tenderize = 0
     def mousePressed(self, x, y):
         pass
 
@@ -30,33 +36,66 @@ class PygameGame(object):
     def timerFired(self, dt):
         frame = self.controller.frame()
         
-        for gesture in frame.gestures():
-            if gesture.type is Leap.Gesture.TYPE_SWIPE:
-                print("swipe")
-                
+        # for gesture in frame.gestures():
+        #     if gesture.type is Leap.Gesture.TYPE_SWIPE:
+        #         swipe = Leap.SwipeGesture(gesture)
+        #         if abs(swipe.direction[0]) < 0.5 and swipe.direction[1] < -0.9 and abs(swipe.direction[2] < 0.5):
+        #             print(swipe.speed)
+        #
+        
+  
+        for dot in self.dots:
+            pygame.draw.circle(self.win, (0,255,0), (int(dot[0]),int(dot[1])), 2)
+
+        
+        jumpCount = 10
+                    
         for hand in frame.hands:
+            print(hand.palm_velocity)
+            normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
+            currentX = normalized[0]*500
+            currentY = 500-normalized[1]*500
+            currentZ = normalized[2]*200
+            if currentX + currentZ / 2 < 200 and currentY < 400 and currentX + currentZ / 2 > 100 and currentY > 300 and not self.swipe: #if in bounds of meat
+                if hand.palm_velocity[1] > 400: #speed of going up
+                    self.jump += abs(hand.palm_velocity[1]/80)
+                    
+                    if jumpCount >= -10: 
+                        neg = 1 #start moving up 
+                        if jumpCount < 0:
+                            neg = -1 # moving down in the parabola
+                        #makes a quadratic parabola to illustrate diff speeds
+                        #0.5 scales the jump smaller 
+                        self.y -= 0.5* (jumpCount ** 2) * neg 
+                        jumpCount -= 1 #change heights
+                    else:
+                        jumpCount = 10
+            
+            if hand.palm_velocity[1] > 0:
+                self.swipe = False
             if hand.grab_strength > 0.5:
                 color = (200,200,0)
             else:
                 color = (200,200,200)
+        
+            pygame.draw.rect(self.win,(255,0,0),(100,300,100,100))
+            pygame.draw.rect(self.win,(255,0,0),(0,0,10+(5*self.tenderize),100))
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
-            pygame.draw.rect(self.win,color,(int(normalized[0]*500),500-int(normalized[1]*500),normalized[2]*200,normalized[2]*200))
-            pygame.display.update()
-            #print(normalized[0]*500)
+            pygame.draw.rect(self.win,color,(int(normalized[0]*500),500-int(normalized[1]*500),25 + normalized[2]*70,25 + normalized[2]*70))
+        pygame.display.update()
         
-        
-                
-            
+           
+
         pass
 
     def redrawAll(self, screen):
         pass
-
+        
     def isKeyPressed(self, key):
         ''' return whether a specific key is being held '''
         return self._keys.get(key, False)
 
-    def __init__(self, width=600, height=400, fps=50, title="112 Pygame Game"):
+    def __init__(self, width=600, height=400, fps=50, title="Cookin' Motion"):
         self.width = width
         self.height = height
         self.fps = fps
