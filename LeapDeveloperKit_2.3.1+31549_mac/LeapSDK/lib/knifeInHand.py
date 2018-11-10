@@ -70,8 +70,8 @@ class PygameGame(object):
                 self.knifeY=250
                 self.win.blit(knife,(self.knifeX,self.knifeY))
                 smallImg = pygame.transform.scale(self.openHand,        (int(normalized[2]*500),int(normalized[2]*500)))
-            if self.toolGrabbed = True and self.steakX<self.knifeX<self.steakX+self.steakDim:
-                pygame.draw.line(screen, (0,0,0),(self.knifeX,250), (self.knifeX,500)))
+            if self.toolGrabbed == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
+                pygame.draw.line(self.win, (0,0,0),(self.knifeX,250), (self.knifeX,500))
             
         #yeet
             self.win.blit(smallImg,(int(normalized[0]*500),500-int(normalized[1]*500)))
