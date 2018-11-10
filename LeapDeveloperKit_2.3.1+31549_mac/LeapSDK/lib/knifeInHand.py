@@ -56,16 +56,20 @@ class PygameGame(object):
             currentX = int(normalized[0]*500)
             currentY = int(500-normalized[1]*500)
             if hand.grab_strength > 0.5:
+                #modifies image size based on the z parameter/ depth of hand
                 smallImg = pygame.transform.scale(self.closedHand, (int(normalized[2]*500),int(normalized[2]*500)))
+                #grabs tool if hand is closed and next to knife
                 if abs(currentX-self.knifeX)<=50:
                     self.toolGrabbed = True
                     self.knifeX=int(normalized[0]*500)
                     self.knifeY=500-int(normalized[1]*500)
+                    #swiches image
                     smallImg = pygame.transform.scale(self.fistKnife, (int(normalized[2]*500),int(normalized[2]*500)))
                 else:
                     self.toolGrabbed = False
                     knife = pygame.transform.scale(self.knife,(150,150))
                     self.win.blit(knife,(50,250))
+            #sets knife to original position if hand is open
             else:
                 self.toolGrabbed = False
                 knife = pygame.transform.scale(self.knife,(150,150))
@@ -91,13 +95,11 @@ class PygameGame(object):
                 
             
         pass
-
+    #draws background and images that are not dependent on the hand sensoring
     def redrawAll(self, screen):
         background = pygame.transform.scale(self.background,(500,500))
         self.win.blit(background, (0,0))
         pygame.draw.rect(self.win,self.brown,[100,100,300,300])
-        #pygame.draw.rect(self.win,self.black,[100,0,300,100])
-        #pygame.draw.rect(self.win,self.black,[100,400,300,500])
         self.win.blit(self.steak,(self.steakX,self.steakY))
         for line in self.lineLst:
             pygame.draw.line(self.win, self.brown,(line,150), (line,350))
