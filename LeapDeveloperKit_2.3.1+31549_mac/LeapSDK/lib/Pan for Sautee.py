@@ -8,17 +8,17 @@ class PygameGame(object):
         self.win = pygame.display.set_mode((500,500))
         self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)  
         self.openHand = pygame.image.load("openHand.png") 
-        self.closedHand = pygame.image.load("closedHand.png") 
-        self.knife = pygame.image.load("knife.png")
+        self.handPan = pygame.image.load("handPan.png") 
+        self.smallMeat = pygame.image.load("smallMeat.png")
         self.fistKnife = pygame.image.load("fistknife.png")
-        self.steak = pygame.image.load("steak.png")
-        self.steakDim = 100
-        pygame.transform.scale(self.steak,(self.steakDim,self.steakDim))
+        self.background = pygame.image.load("background.png")
+        self.backgroundDim = 100
+        pygame.transform.scale(self.background,(self.backgroundDim,self.backgroundDim))
         self.knifeX = 50
         self.knifeY = 250  
         self.steakX = 100
         self.steakY = 150  
-        self.toolGrabbed = False
+        self.panFlipped = False
         self.isClosed = False
         pass
 
@@ -39,10 +39,10 @@ class PygameGame(object):
 
     def keyReleased(self, keyCode, modifier):
         pass
+    
 
     def timerFired(self, dt):
         frame = self.controller.frame()
-        self.win.blit(self.steak,(self.steakX,self.steakY))
         
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
@@ -53,24 +53,25 @@ class PygameGame(object):
             currentX = int(normalized[0]*500)
             currentY = int(500-normalized[1]*500)
             if hand.grab_strength > 0.5:
-                smallImg = pygame.transform.scale(self.closedHand, (int(normalized[2]*500),int(normalized[2]*500)))
-                if abs(currentX-self.knifeX)<=50:
-                    self.toolGrabbed = True
-                    self.knifeX=int(normalized[0]*500)
-                    self.knifeY=500-int(normalized[1]*500)
-                    smallImg = pygame.transform.scale(self.fistKnife, (int(normalized[2]*500),int(normalized[2]*500)))
-                else:
-                    self.toolGrabbed = False
-                    knife = pygame.transform.scale(self.knife,(150,150))
-                    self.win.blit(knife,(50,250))
+                smallImg = pygame.transform.scale(self.handPan, (int(normalized[2]*500),int(normalized[2]*500)))
+
+                if hand.palm_velocity[1] > 400:
+                    self.swipe = True
+                    self.panFlipped = True
+                    smallImg = pygame.transform.scale(self.smallMeat,(int(normalized[2]*500),int(normalized[2]*500)))
+                
+                if hand.palm_velocity[1] < 0:
+                    self.swipe = False
+                    self.panFlipped = False
+                    smallImg = pygame.transform.scale(self.handPan, (int(normalized[2]*500),int(normalized[2]*500)))
             else:
-                self.toolGrabbed = False
-                knife = pygame.transform.scale(self.knife,(150,150))
+                self.panFlipped = False
+                knife = pygame.transform.scale(self.smallMeat,(150,150))
                 self.knifeX=50
                 self.knifeY=250
                 self.win.blit(knife,(self.knifeX,self.knifeY))
                 smallImg = pygame.transform.scale(self.openHand,        (int(normalized[2]*500),int(normalized[2]*500)))
-            if self.toolGrabbed == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
+            if self.panFlipped == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
                 pygame.draw.line(self.win, (0,0,0),(self.knifeX,250), (self.knifeX,500))
             
         #yeet
@@ -79,16 +80,13 @@ class PygameGame(object):
 
             print(normalized)
 
-            #pygame.draw.rect(self.win,color,(int(normalized[0]*500),500-int(normalized[1]*500),normalized[2]*200,normalized[2]*200))
             pygame.display.update()
         
         
-                
             
-        pass
-
     def redrawAll(self, screen):
-        pass
+        self.win.blit(self.background, (0,0))
+
 
     def isKeyPressed(self, key):
         ''' return whether a specific key is being held '''
