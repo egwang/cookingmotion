@@ -59,6 +59,6 @@ while run:
         else:
             isJump = False
             jumpCount = 10
-   
+    redrawWindow()
             
 pygame.quit() #closes the window
