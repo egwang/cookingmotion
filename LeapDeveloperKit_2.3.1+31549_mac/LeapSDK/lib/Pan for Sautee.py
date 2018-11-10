@@ -8,10 +8,12 @@ class PygameGame(object):
         self.win = pygame.display.set_mode((500,500))
         self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)  
         self.openHand = pygame.image.load("openHand.png") 
-        self.handPan = pygame.image.load("handPan.png") 
+        self.handPan = pygame.image.load("panfull.png") 
+        self.panfull = pygame.image.load("panflip.png")
         self.smallMeat = pygame.image.load("smallMeat.png")
         self.fistKnife = pygame.image.load("fistknife.png")
         self.background = pygame.image.load("background.png")
+        self.stove = pygame.image.load("stove.png")
         self.backgroundDim = 100
         pygame.transform.scale(self.background,(self.backgroundDim,self.backgroundDim))
         self.knifeX = 50
@@ -20,7 +22,7 @@ class PygameGame(object):
         self.steakY = 150  
         self.panFlipped = False
         self.isClosed = False
-        pass
+        
 
     def mousePressed(self, x, y):
         pass
@@ -52,25 +54,27 @@ class PygameGame(object):
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
             currentX = int(normalized[0]*500)
             currentY = int(500-normalized[1]*500)
+            currentZ = normalized[2]*0.5 + 0.5
             if hand.grab_strength > 0.5:
-                smallImg = pygame.transform.scale(self.handPan, (int(normalized[2]*500),int(normalized[2]*500)))
+                smallImg = pygame.transform.rotozoom(self.handPan, 0,currentZ)
 
-                if hand.palm_velocity[1] > 400:
+                if hand.palm_velocity[1] > 200:
                     self.swipe = True
                     self.panFlipped = True
-                    smallImg = pygame.transform.scale(self.smallMeat,(int(normalized[2]*500),int(normalized[2]*500)))
+                    smallImg = pygame.transform.rotozoom(self.panfull, 0,currentZ)
                 
                 if hand.palm_velocity[1] < 0:
                     self.swipe = False
                     self.panFlipped = False
-                    smallImg = pygame.transform.scale(self.handPan, (int(normalized[2]*500),int(normalized[2]*500)))
+                    smallImg = pygame.transform.rotozoom(self.handPan, 0,currentZ)
+
             else:
                 self.panFlipped = False
                 knife = pygame.transform.scale(self.smallMeat,(150,150))
                 self.knifeX=50
                 self.knifeY=250
                 self.win.blit(knife,(self.knifeX,self.knifeY))
-                smallImg = pygame.transform.scale(self.openHand,        (int(normalized[2]*500),int(normalized[2]*500)))
+                smallImg = pygame.transform.rotozoom(self.openHand,0,currentZ)
             if self.panFlipped == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
                 pygame.draw.line(self.win, (0,0,0),(self.knifeX,250), (self.knifeX,500))
             
@@ -86,6 +90,7 @@ class PygameGame(object):
             
     def redrawAll(self, screen):
         self.win.blit(self.background, (0,0))
+        self.win.blit(self.stove, (200,200))
 
 
     def isKeyPressed(self, key):
