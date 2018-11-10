@@ -11,13 +11,16 @@ class PygameGame(object):
         self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)   
         self.meat = pygame.image.load("meat.png")
         pygame.transform.scale(self.meat,(100,100))
-        self.meatBounds = (self.width/2-80,self.height/1.3-50,self.width/2+80,self.height/1.3+50)
+        self.meatBounds = (self.width/2-80,self.height/1.3-50,self.width/2+80,self.height/1.3+40)
         self.background = pygame.image.load("background.png")
         pygame.transform.scale(self.background,(500,500))
         self.dots = []  
         self.swipe = False
         self.tenderize = 0
         self.score = 0
+        self.openHand = pygame.image.load("openhand.png")
+        self.closedHand = pygame.image.load("closedhand.png")
+
         pygame.font.init() # you have to call this at the start, 
                    # if you want to use this module.
         self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
@@ -45,7 +48,7 @@ class PygameGame(object):
         self.win.blit(self.background,(0,0))
 
         frame = self.controller.frame()
-        textsurface = self.myfont.render(str(int(self.score)), False, (0, 0, 0))
+        textsurface = self.myfont.render("Score: " + str(int(self.score)), False, (0, 0, 0))
         self.win.blit(textsurface,(50,50))
 
         # for gesture in frame.gestures():
@@ -60,7 +63,7 @@ class PygameGame(object):
         pygame.draw.rect(self.win,(255,0,0),(0,0,10+(5*self.tenderize),10))
         pygame.draw.polygon(self.win,(0,255,0),[(400,10),(380,20),(420,20)])
 
-        self.score = 100 * (1 - abs(80-self.tenderize)/80)
+        self.score = 100 * (1 - abs(78-self.tenderize)/78)
         print(self.score)
         for dot in self.dots:
             pygame.draw.circle(self.win, (128, 0, 0), (int(dot[0]),int(dot[1])), 2)
@@ -70,7 +73,8 @@ class PygameGame(object):
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
             currentX = normalized[0]*500
             currentY = 500-normalized[1]*500
-            currentZ = normalized[2]*200
+            currentZ = int(normalized[2]*200)
+            image = 0
             if currentX + currentZ / 2 < self.meatBounds[2] and currentY < self.meatBounds[3] and currentX + currentZ / 2 > self.meatBounds[0] and currentY > self.meatBounds[1] and not self.swipe:
                 if hand.palm_velocity[1] < -400:
                     self.swipe = True
@@ -81,12 +85,14 @@ class PygameGame(object):
                 
             if hand.palm_velocity[1] > 0:
                 self.swipe = False
+        
             if hand.grab_strength > 0.5:
-                color = (200,200,0)
+                image = self.closedHand
+               
             else:
-                color = (200,200,200)
-            normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
-            pygame.draw.rect(self.win,color,(int(normalized[0]*500),500-int(normalized[1]*500),25 + normalized[2]*70,25 + normalized[2]*70))
+                image = self.openHand
+            print(currentZ)
+            self.win.blit(image,(currentX,currentY))
         pygame.display.update()
             #print(normalized[0]*500)
         
