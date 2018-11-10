@@ -20,10 +20,19 @@ class Tenderise(object):
         self.score = 0
         self.openHand = pygame.image.load("openhand.png")
         self.closedHand = pygame.image.load("closedhand.png")
-
+        self.openHand = pygame.transform.rotozoom(self.openHand,0,.8)
+        self.closedHand = pygame.transform.rotozoom(self.closedHand,0,.8)
+        self.tenderizerX = 300
+        self.tenderizerY = 30
+        self.hasTenderizer = False
+        self.tenderizer = pygame.image.load("tenderizer.png")
+        self.tenderizerinhand = pygame.image.load("tenderizerinhand.png")
         pygame.font.init() # you have to call this at the start, 
                    # if you want to use this module.
         self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        self.image = 0
+        self.currentX = 0
+        self.currentY = 0
         pass
 
     def mousePressed(self, x, y):
@@ -74,8 +83,7 @@ class Tenderise(object):
             currentX = normalized[0]*500
             currentY = 500-normalized[1]*500
             currentZ = int(normalized[2]*200)
-            image = 0
-            if currentX + currentZ / 2 < self.meatBounds[2] and currentY < self.meatBounds[3] and currentX + currentZ / 2 > self.meatBounds[0] and currentY > self.meatBounds[1] and not self.swipe:
+            if currentX + currentZ / 2 < self.meatBounds[2] and currentY < self.meatBounds[3] and currentX + currentZ / 2 > self.meatBounds[0] and currentY > self.meatBounds[1] and not self.swipe and self.hasTenderizer:
                 if hand.palm_velocity[1] < -400:
                     self.swipe = True
                     for i in range(3):
@@ -87,12 +95,36 @@ class Tenderise(object):
                 self.swipe = False
         
             if hand.grab_strength > 0.5:
-                image = self.closedHand
+                self.image = self.closedHand
+                if abs(currentX-self.tenderizerX)<=50 and abs(currentY - self.tenderizerY -100) <= 50:
+                    self.hasTenderizer = True
+
                
             else:
-                image = self.openHand
-            print(currentZ)
-            self.win.blit(image,(currentX,currentY))
+                self.image = self.openHand
+                self.hasTenderizer = False
+            
+
+            self.currentX = currentX
+            self.currentY = currentY
+            if self.hasTenderizer:
+
+                self.image = self.tenderizerinhand
+                self.win.blit(self.tenderizer,(1000,1000))
+            else:
+                self.win.blit(self.tenderizer,(self.tenderizerX,self.tenderizerY))
+            self.win.blit(self.image,(currentX,currentY))
+        if len(frame.hands) == 0:
+            self.win.blit(self.tenderizer,(self.tenderizerX,self.tenderizerY))
+
+        
+            
+            
+
+                
+            
+                
+                
         pygame.display.update()
             #print(normalized[0]*500)
         
