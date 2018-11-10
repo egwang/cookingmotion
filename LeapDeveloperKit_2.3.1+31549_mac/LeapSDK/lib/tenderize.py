@@ -1,7 +1,7 @@
 import pygame
 import Leap, sys, thread, time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
-class Tenderise(object):
+class PygameGame(object):
 
     def init(self):
         self.controller = Leap.Controller()
@@ -83,6 +83,8 @@ class Tenderise(object):
             currentX = normalized[0]*500
             currentY = 500-normalized[1]*500
             currentZ = int(normalized[2]*200)
+            scale = normalized[2]*0.5 + 0.5
+
             if currentX + currentZ / 2 < self.meatBounds[2] and currentY < self.meatBounds[3] and currentX + currentZ / 2 > self.meatBounds[0] and currentY > self.meatBounds[1] and not self.swipe and self.hasTenderizer:
                 if hand.palm_velocity[1] < -400:
                     self.swipe = True
@@ -95,13 +97,15 @@ class Tenderise(object):
                 self.swipe = False
         
             if hand.grab_strength > 0.5:
-                self.image = self.closedHand
+                self.image = pygame.transform.rotozoom(self.closedHand,0,scale)
+
                 if abs(currentX-self.tenderizerX)<=50 and abs(currentY - self.tenderizerY -100) <= 50:
                     self.hasTenderizer = True
 
                
             else:
-                self.image = self.openHand
+                self.image = pygame.transform.rotozoom(self.openHand,0,scale)
+
                 self.hasTenderizer = False
             
 
@@ -109,7 +113,8 @@ class Tenderise(object):
             self.currentY = currentY
             if self.hasTenderizer:
 
-                self.image = self.tenderizerinhand
+                self.image = pygame.transform.rotozoom(self.tenderizerinhand,0,scale)
+
                 self.win.blit(self.tenderizer,(1000,1000))
             else:
                 self.win.blit(self.tenderizer,(self.tenderizerX,self.tenderizerY))
@@ -195,4 +200,5 @@ def main():
     game.run()
 
 if __name__ == '__main__':
-    main()
+    main()    
+    

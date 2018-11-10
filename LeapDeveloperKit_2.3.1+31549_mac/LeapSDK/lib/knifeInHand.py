@@ -7,8 +7,8 @@ class PygameGame(object):
         self.controller = Leap.Controller()
         self.win = pygame.display.set_mode((500,500))
         self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)  
-        self.openHand = pygame.image.load("openHand.png") 
-        self.closedHand = pygame.image.load("closedHand.png") 
+        self.openHand = pygame.image.load("openhand.png") 
+        self.closedHand = pygame.image.load("closedhand.png") 
         self.knife = pygame.image.load("knife.png")
         self.fistKnife = pygame.image.load("fistknife.png")
         self.steak = pygame.image.load("steak.png")
@@ -24,6 +24,7 @@ class PygameGame(object):
         self.brown = (139,69,19)
         self.black = (0,0,0)
         self.background = pygame.image.load("background.png")
+        self.swipe = False
         pass
 
     def mousePressed(self, x, y):
@@ -55,7 +56,10 @@ class PygameGame(object):
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
             currentX = int(normalized[0]*500)
             currentY = int(500-normalized[1]*500)
+            currentZ = normalized[2]*0.5 + 0.5
+            smallImg = 0
             if hand.grab_strength > 0.5:
+<<<<<<< HEAD
                 #modifies image size based on the z parameter/ depth of hand
                 smallImg = pygame.transform.scale(self.closedHand, (int(normalized[2]*500),int(normalized[2]*500)))
                 #grabs tool if hand is closed and next to knife
@@ -70,16 +74,35 @@ class PygameGame(object):
                     knife = pygame.transform.scale(self.knife,(150,150))
                     self.win.blit(knife,(50,250))
             #sets knife to original position if hand is open
+=======
+                smallImg = pygame.transform.rotozoom(self.closedHand,0,currentZ)
+                if abs(currentX-self.knifeX)<=50:
+                    self.toolGrabbed = True
+
+>>>>>>> 8e62a992a4d4bf0780b5f92c9f963f7790a0cdc0
             else:
                 self.toolGrabbed = False
-                knife = pygame.transform.scale(self.knife,(150,150))
+                #knife = pygame.transform.scale(self.knife,(150,150))
                 self.knifeX=50
                 self.knifeY=250
-                self.win.blit(knife,(self.knifeX,self.knifeY))
-                smallImg = pygame.transform.scale(self.openHand,        (int(normalized[2]*500),int(normalized[2]*500)))
-            if self.toolGrabbed == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
-                self.lineLst.append(self.knifeX)
-                
+                self.win.blit(self.knife,(self.knifeX,self.knifeY))
+                smallImg = pygame.transform.rotozoom(self.openHand,0,currentZ)
+
+            if self.toolGrabbed:
+                smallImg = pygame.transform.rotozoom(self.fistKnife,0,currentZ)
+
+                self.win.blit(self.knife,(1000,1000))
+            else:
+                self.win.blit(self.knife,(50,250))
+            
+            if self.toolGrabbed == True and self.steakX<currentX<self.steakX+self.steakDim and \
+            not self.swipe:
+                if hand.palm_velocity[1] < -400:
+                    self.swipe = True
+                    self.lineLst.append(currentX+40)
+            
+            if hand.palm_velocity[1] > 0:
+                self.swipe = False
             
         #yeet
             self.win.blit(smallImg,(int(normalized[0]*500),500-int(normalized[1]*500)))

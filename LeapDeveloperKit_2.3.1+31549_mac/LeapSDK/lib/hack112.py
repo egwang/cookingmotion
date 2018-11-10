@@ -6,6 +6,9 @@ class PygameGame(object):
     def init(self):
         self.controller = Leap.Controller()
         self.win = pygame.display.set_mode((500,500))
+<<<<<<< HEAD
+        self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)        
+=======
         self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)  
         self.openHand = pygame.image.load("openHand.png") 
         self.closedHand = pygame.image.load("closedHand.png") 
@@ -17,6 +20,7 @@ class PygameGame(object):
         self.knifeY = 250    
         self.toolGrabbed = False
         self.isClosed = False
+>>>>>>> 6dbf2265079e8d64e08282da44ad4934a6f99fc5
         pass
 
     def mousePressed(self, x, y):
@@ -39,13 +43,23 @@ class PygameGame(object):
 
     def timerFired(self, dt):
         frame = self.controller.frame()
+<<<<<<< HEAD
+=======
         self.win.blit(self.steak,(150,200))
+>>>>>>> 6dbf2265079e8d64e08282da44ad4934a6f99fc5
         
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
                 print("swipe")
                 
         for hand in frame.hands:
+<<<<<<< HEAD
+            if hand.grab_strength > 0.5:
+                color = (200,200,0)
+            else:
+                color = (200,200,200)
+=======
+>>>>>>> 6dbf2265079e8d64e08282da44ad4934a6f99fc5
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
             currentX = int(normalized[0]*500)
             currentY = int(500-normalized[1]*500)
