@@ -16,7 +16,7 @@ run = True
 isJump = False
 jumpCount = 10 # how much we want the sprite to jump
 
-def redrawWindow():
+def redrawWindow(): #keeps redraw separate for good style
     win.fill((255,255,255))
     #win is where the rect is drawn onto
     #pygame takes in RGB Values
@@ -25,7 +25,8 @@ def redrawWindow():
     pygame.display.update() #must update for the dispaly to show the rect
     
 
-while run:
+#mainloops should be separate than redrawAll
+while run: 
     pygame.time.delay(100) #timer in the game
     
     for event in pygame.event.get(): #event.type only works for 1 time things; ie: quit
