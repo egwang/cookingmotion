@@ -6,6 +6,7 @@ class PygameGame(object):
     def init(self):
         self.controller = Leap.Controller()
         self.win = pygame.display.set_mode((500,500))
+        self.controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)        
         pass
 
     def mousePressed(self, x, y):
@@ -28,22 +29,24 @@ class PygameGame(object):
 
     def timerFired(self, dt):
         frame = self.controller.frame()
-        for hand in frame.hands:
-            color = (200,200,200)
-            for finger in hand.fingers:
-                boneVect = finger.bone(3).next_joint
-                handVect = hand.palm_position
-                distance = ((boneVect[0]-handVect[0])**2 + (boneVect[1]-handVect[1])**2 + (boneVect[2]-handVect[2])**2)**0.5
-                if distance < 50:
-                    print("yee")
-                    color = (200,200,0)
-                else:
-                    color = (200,200,200)
+        
+        for gesture in frame.gestures():
+            if gesture.type is Leap.Gesture.TYPE_SWIPE:
+                print("swipe")
                 
+        for hand in frame.hands:
+            if hand.grab_strength > 0.5:
+                color = (200,200,0)
+            else:
+                color = (200,200,200)
             normalized = frame.interaction_box.normalize_point(hand.palm_position, True)
             pygame.draw.rect(self.win,color,(int(normalized[0]*500),500-int(normalized[1]*500),normalized[2]*200,normalized[2]*200))
             pygame.display.update()
             #print(normalized[0]*500)
+        
+        
+                
+            
         pass
 
     def redrawAll(self, screen):
