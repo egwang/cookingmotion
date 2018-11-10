@@ -90,7 +90,7 @@ class PygameGame(object):
             
     def redrawAll(self, screen):
         self.win.blit(self.background, (0,0))
-        self.win.blit(self.stove, (200,200))
+        self.win.blit(self.stove, (125,200))
 
 
     def isKeyPressed(self, key):
