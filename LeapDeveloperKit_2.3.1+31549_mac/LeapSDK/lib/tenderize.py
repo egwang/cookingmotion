@@ -1,7 +1,7 @@
 import pygame
 import Leap, sys, thread, time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
-class PygameGame(object):
+class Tenderise(object):
 
     def init(self):
         self.controller = Leap.Controller()
