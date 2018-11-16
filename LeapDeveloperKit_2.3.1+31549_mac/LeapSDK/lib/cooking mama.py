@@ -1,24 +1,24 @@
 import pygame
-
 from pygamegame import PygameGame
 from Start import Start
+from tenderize import Tenderize
 
 #run game
 class Game(PygameGame):
     def init(self):
-        data.time = 0
+        self.time = 0
         #start page
         self.startpage = True
         Start.init()
         start = Start(self.width / 2, self.height / 2)
-        self.start = pygame.sprite.GroupSingle(start)
+        self.start = pygame.sprite.GroupSingle(tenderize)
         # #import each page here
-        # self.tenderise = import the funct
+        # self.tenderise = pygame.sprite.GroupSingle(tenderize)
         # self.chop = import the funct
         # self.saute = import the funct
-        self.tenderisePage = False:
-        self.chopPage = False:
-        self.sautePage = False:
+        self.tenderisePage = False
+        self.chopPage = False
+        self.sautePage = False
     def keyPressed(self, code, mod):
         pass
         
@@ -34,8 +34,8 @@ class Game(PygameGame):
             pass
         else:
             #change each page every 10 seconds
-            data.time += 1
-            if data.time < 1000:
+            self.time += 1
+            if self.time < 1000:
                 self.tenderisePage = True
             elif 1000 < data.time < 2000:
                 self.tenderisePage = False
@@ -59,5 +59,6 @@ class Game(PygameGame):
             pass
         else:
             #draw final page if we have
+            pass
 
 Game(520, 786).run()

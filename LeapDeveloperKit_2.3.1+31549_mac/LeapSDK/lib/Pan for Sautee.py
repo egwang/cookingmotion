@@ -70,21 +70,27 @@ class PygameGame(object):
 
             else:
                 self.panFlipped = False
-                knife = pygame.transform.scale(self.smallMeat,(150,150))
-                self.knifeX=50
+                knife = pygame.transform.rotozoom(self.smallMeat, 0,0.5)
+
+                self.knifeX=150
                 self.knifeY=250
                 self.win.blit(knife,(self.knifeX,self.knifeY))
                 smallImg = pygame.transform.rotozoom(self.openHand,0,currentZ)
-            if self.panFlipped == True and self.steakX<self.knifeX<self.steakX+self.steakDim:
-                pygame.draw.line(self.win, (0,0,0),(self.knifeX,250), (self.knifeX,500))
+            if self.panFlipped == True:
+                pass
             
         #yeet
             self.win.blit(smallImg,(int(normalized[0]*500),500-int(normalized[1]*500)))
+        if len(frame.hands) == 0:
+            knife = pygame.transform.rotozoom(self.smallMeat, 0,0.5)
+            self.knifeX=150
+            self.knifeY=250
+            self.win.blit(knife,(self.knifeX,self.knifeY))
 
 
-            print(normalized)
 
-            pygame.display.update()
+
+        pygame.display.update()
         
         
             
