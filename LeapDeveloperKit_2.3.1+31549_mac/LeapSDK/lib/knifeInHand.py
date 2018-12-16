@@ -59,7 +59,7 @@ class PygameGame(object):
             currentZ = normalized[2]*0.5 + 0.5
             smallImg = 0
             if hand.grab_strength > 0.5:
-<<<<<<< HEAD
+#<<<<<<< HEAD
                 #modifies image size based on the z parameter/ depth of hand
                 smallImg = pygame.transform.scale(self.closedHand, (int(normalized[2]*500),int(normalized[2]*500)))
                 #grabs tool if hand is closed and next to knife
@@ -74,12 +74,12 @@ class PygameGame(object):
                     knife = pygame.transform.scale(self.knife,(150,150))
                     self.win.blit(knife,(50,250))
             #sets knife to original position if hand is open
-=======
+#=======
                 smallImg = pygame.transform.rotozoom(self.closedHand,0,currentZ)
                 if abs(currentX-self.knifeX)<=50:
                     self.toolGrabbed = True
 
->>>>>>> 8e62a992a4d4bf0780b5f92c9f963f7790a0cdc0
+#>>>>>>> 8e62a992a4d4bf0780b5f92c9f963f7790a0cdc0
             else:
                 self.toolGrabbed = False
                 #knife = pygame.transform.scale(self.knife,(150,150))
