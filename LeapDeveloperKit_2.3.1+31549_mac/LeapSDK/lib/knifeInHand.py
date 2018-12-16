@@ -25,6 +25,9 @@ class PygameGame(object):
         self.black = (0,0,0)
         self.background = pygame.image.load("background.png")
         self.swipe = False
+        self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        self.cut = 0
+        self.score = 0
         pass
 
     def mousePressed(self, x, y):
@@ -47,7 +50,15 @@ class PygameGame(object):
 
     def timerFired(self, dt):
         frame = self.controller.frame()
+        textsurface = self.myfont.render("Score: " + str(int(self.score)), False, (0, 0, 0))
+        self.win.blit(textsurface,(50,50))
         
+        pygame.draw.rect(self.win,(255,0,0),(0,0,10+(5*self.cut),10))
+        pygame.draw.polygon(self.win,(0,255,0),[(400,10),(380,20),(420,20)])
+        
+        print(self.cut)
+        self.score = self.cut
+
         for gesture in frame.gestures():
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
                 print("swipe")
@@ -100,6 +111,7 @@ class PygameGame(object):
                 if hand.palm_velocity[1] < -400:
                     self.swipe = True
                     self.lineLst.append(currentX+40)
+                    self.cut += 5
             
             if hand.palm_velocity[1] > 0:
                 self.swipe = False
